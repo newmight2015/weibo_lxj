@@ -1,0 +1,9 @@
+*.project
+*.classpath
+*.zip
+*.xls
+*.rar
+*.7z
+*.log
+bin/
+.settings/
