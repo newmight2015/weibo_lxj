@@ -38,7 +38,9 @@ public class Weibo {
 		String bloggerId = userE.attr("usercard");
 		bloggerId = bloggerId.substring(bloggerId.indexOf('=')+1,bloggerId.indexOf('&'));
 		this.setBloggerId(bloggerId);
-		String content = weiboE.select("dd.content em").first().text();
+		String content = weiboE.select("dd.content>p").first().text();
+		int index1 = content.indexOf('：');
+		content = content.substring(index1+1);
 		this.setContent(content);
 		Element dateE = weiboE.select("p.info>a").first();
 		Element originE = weiboE.select("p.info>a").last();
