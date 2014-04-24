@@ -65,7 +65,7 @@ public class SearchPages {
 		checkBlack(doc);
 		isNoResult(doc);
 		totalPageNum = getTotalPageNum();
-		if ( currPageNum == 1 && totalPageNum == 0) {
+		if (currPageNum == 1 && totalPageNum == 0) {
 			return false;
 		}
 		return true;
@@ -81,11 +81,15 @@ public class SearchPages {
 		Element e = null;
 		int i = 0;
 		while ((e = doc.getElementsByClass("search_page_M").last()) == null) {
-			TimeUtil.sleep(3000);
+			TimeUtil.sleep(15000);
 			doc = getCurrPage().getDocument();
+			if (i % 3 == 0) {
+				WebDriverUtil.refresh();
+			}
 			if (++i > 10) {
 				return 0;
 			}
+
 		}
 		String str = e.select("li:nth-last-child(2)").text();
 		int max = Integer.parseInt(str);

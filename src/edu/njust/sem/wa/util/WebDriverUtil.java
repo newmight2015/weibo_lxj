@@ -43,7 +43,13 @@ public class WebDriverUtil {
 
 		return driver;
 	}
-
+	/**
+	 * 刷新页面
+	 */
+	public static void refresh(){
+		String url = driver.getCurrentUrl();
+		get(url);
+	}
 	/**
 	 * 
 	 * @return
