@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.http.Header;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -20,8 +21,13 @@ import org.openqa.selenium.WebDriver;
 
 public class FetchUtil {
 	private static CloseableHttpClient httpClient = null;
+	private static final int TIME_OUT = 10;
 	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0";
 	private static String html;
+	private static RequestConfig config = RequestConfig.custom()
+			.setSocketTimeout(TIME_OUT * 1000)
+			.setConnectTimeout(TIME_OUT * 1000)
+			.setConnectionRequestTimeout(TIME_OUT * 1000).build();
 
 	public static String getCachedHtml() {
 		WebDriver driver = WebDriverUtil.getDefaultDriver();
@@ -30,7 +36,8 @@ public class FetchUtil {
 		}
 		return html;
 	}
-	public static String getHtml(){
+
+	public static String getHtml() {
 		WebDriver driver = WebDriverUtil.getDefaultDriver();
 		return driver.getPageSource();
 	}
@@ -65,6 +72,7 @@ public class FetchUtil {
 			headers.add(headerReferer);
 			headers.add(headerEncoding);
 			builder.setDefaultHeaders(headers);
+			builder.setDefaultRequestConfig(config);
 			httpClient = builder.build();
 		}
 		return httpClient;
@@ -77,22 +85,21 @@ public class FetchUtil {
 		CloseableHttpResponse res = null;
 		try {
 			HttpGet get = new HttpGet(url);
+			get.setConfig(config);
 			res = (CloseableHttpResponse) httpClient.execute(get);
 			if (res.getStatusLine().getStatusCode() == 200) {
 				String str = EntityUtils.toString(res.getEntity(), "UTF-8");
 				EntityUtils.consumeQuietly(res.getEntity());
 				return str;
 			} else {
-				Logger.log("可能被拉黑了，请仔细检查,状态码：" +res.getStatusLine().getStatusCode());
-//				JOptionPane.showMessageDialog(null, "请求用户信息失败，休息一下");
-				TimeUtil.sleep(60*1000);
+				Logger.log("可能被拉黑了，请仔细检查,状态码："
+						+ res.getStatusLine().getStatusCode());
+				TimeUtil.sleep(60 * 1000);
 				return requestBlogger(url);
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-//			JOptionPane.showMessageDialog(null, "请求用户信息失败，休息一下");
-			TimeUtil.sleep(60*1000);
-			TimeUtil.sleep(10000);
+			TimeUtil.sleep(60 * 1000);
 			return requestBlogger(url);
 		} finally {
 			try {
@@ -112,6 +119,7 @@ public class FetchUtil {
 		}
 		HttpGet get = new HttpGet(url);
 		get.setHeader("X-Requested-With", "XMLHttpRequest");
+		get.setConfig(config);
 		CloseableHttpResponse res = null;
 		try {
 			res = httpClient.execute(get);
@@ -120,9 +128,10 @@ public class FetchUtil {
 				EntityUtils.consumeQuietly(res.getEntity());
 				return jsonstr;
 			} else {
-				Logger.log("可能被拉黑了，请仔细检查,状态码：" +res.getStatusLine().getStatusCode());
-				//JOptionPane.showMessageDialog(null, "ajax请求失败，休息一下");
-				TimeUtil.sleep(2*60*1000);
+				Logger.log("可能被拉黑了，请仔细检查,状态码："
+						+ res.getStatusLine().getStatusCode());
+				// JOptionPane.showMessageDialog(null, "ajax请求失败，休息一下");
+				TimeUtil.sleep(2 * 60 * 1000);
 				return requestJson(url);
 			}
 		} catch (ClientProtocolException e) {

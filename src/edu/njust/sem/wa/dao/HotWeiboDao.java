@@ -16,8 +16,8 @@ public class HotWeiboDao {
 	private PreparedStatement ps;
 	private String sqlQueryOneHotWeibo = "SELECT weibo_url,weibo_id,has_comment,has_forward ,forward_request_times,"
 			+ "comment_request_times,forward_action_data,comment_action_data,curr_forward_page_num,total_forward_page_num,"
-			+ "curr_comment_page_num,total_comment_page_num"
-			+ " from weibo_hot_weibo limit 1";
+			+ "curr_comment_page_num,total_comment_page_num "
+			+ " from weibo_hot_weibo where has_comment = 0 or has_forward = 0 limit 1";
 	private String insertHotWeibo = "insert weibo_hot_weibo (weibo_url,weibo_id,forward_request_times,comment_request_times,has_comment,has_forward,"
 			+ "forward_action_data,comment_action_data,curr_forward_page_num,total_forward_page_num,curr_comment_page_num,total_comment_page_num) "
 			+ "values (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -27,7 +27,8 @@ public class HotWeiboDao {
 			+ "curr_forward_page_num = ?, total_comment_page_num = ?,curr_comment_page_num = ?,"
 			+ "forward_request_times = ?,comment_request_times= ? where weibo_url = ?";
 	private String sqlDeleteHotWeibo = "delete from weibo_hot_weibo where weibo_url = ?";
-	private String sqlDeleteFetchedHotWeibo = "delete FROM weibo_hot_weibo where has_comment = 1 and has_forward = 1";
+	private String sqlDeleteFetchedHotWeibo = "delete FROM weibo_hot_weibo where has_comment = 1 "
+			+ "and has_forward = 1 and total_forward_page_num < 10 and total_comment_page_num < 10";
 
 	public static HotWeiboDao getInstance() {
 		return hotWeiboDao;
