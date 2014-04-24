@@ -114,7 +114,7 @@ public class WeiboPage {
 	 * @return 若有下一页则翻页并返回true，若没有下一页则直接返回false
 	 */
 	public boolean next() {
-		TimeUtil.sleep(1000);
+		TimeUtil.sleep(2000);
 		++currPageNum;
 		if (currPageNum <= totalPageNum) {
 			if (type.equals(PageType.Forward)) {
@@ -127,12 +127,6 @@ public class WeiboPage {
 			return true;
 		} else {
 			html = null;
-			if (hotWeibo.getCurrCommentPageNum() > hotWeibo
-					.getTotalCommentPageNum()
-					&& hotWeibo.getCurrForwardPageNum() == hotWeibo
-							.getTotalForwardPageNum()) {
-				hotWeiboService.deleteHotWeibo(hotWeibo);
-			}
 			return false;
 		}
 	}

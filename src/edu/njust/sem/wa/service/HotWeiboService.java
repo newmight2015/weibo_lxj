@@ -10,7 +10,6 @@ import edu.njust.sem.wa.domain.Forward;
 import edu.njust.sem.wa.domain.HotWeibo;
 import edu.njust.sem.wa.domain.PageType;
 import edu.njust.sem.wa.util.Logger;
-import edu.njust.sem.wa.util.TimeUtil;
 
 public class HotWeiboService {
 	private static HotWeiboService hotWeiboService;
@@ -101,7 +100,6 @@ public class HotWeiboService {
 			}
 			BloggerService.drawAllBloggerFromPage(html);
 			forwardService.insertForwards(forwards);
-			TimeUtil.sleep(5000);
 		} while (weiboPage.next());
 		return true;
 	}
@@ -127,7 +125,6 @@ public class HotWeiboService {
 			}
 			BloggerService.drawAllBloggerFromPage(html);
 			commentService.insertComments(comments);
-			TimeUtil.sleep(5000);
 		} while (weiboPage.next());
 		return true;
 	}

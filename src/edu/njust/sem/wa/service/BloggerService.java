@@ -25,7 +25,6 @@ public class BloggerService {
 	private static BloggerDao bloggerDao = new BloggerDao();
 
 	public static void drawAllBloggerFromPage(String html) {
-		System.out.println("getting all user.....");
 		Document doc = Jsoup.parse(html);
 		Elements bloggerEs = doc.select("a[usercard]");
 		for (Element bloggerE : bloggerEs) {
@@ -36,7 +35,6 @@ public class BloggerService {
 					nikeName = nikeName.split("@")[1];
 				}
 				if (bloggerDao.hasBlogger(nikeName)) {
-					//System.out.println("用户[" + nikeName + "]已抓取");
 					continue;
 				}
 				blogger = new Blogger();
@@ -44,9 +42,6 @@ public class BloggerService {
 				blogger = getBlogger(blogger);
 				if (blogger != null && blogger.getId() != null) {
 					bloggerDao.insertBlogger(blogger);
-				}
-				else{
-					//System.out.println(blogger);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
