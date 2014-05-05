@@ -122,23 +122,40 @@ public class RelDao {
 	}
 
 	public List<RelEntry> getForwardRels() {
-		String sql = "SELECT content,user_name FROM weibo_info where is_origin = 0";
+		String sql1 = "SELECT forwarder_id,weibo_info.blogger_id,weibo_forward.content "
+				+ "FROM weibo_forward,weibo_info where weibo_forward.weibo_id = weibo_info.mid "
+				+ "and weibo_forward.content not like '%//@%'";
+		String sql2 = "SELECT forwarder_id,content FROM weibo_forward where content like '%//@%'";
 		final List<RelEntry> entries = new LinkedList<>();
-		jdbcTemplate.query(sql, new RowCallbackHandler() {
-
+		jdbcTemplate.query(sql1, new RowCallbackHandler() {
 			@Override
 			public void processRow(ResultSet rs) throws SQLException {
 				do {
-					String originName = getBloggerForFoward(rs
-							.getString("content"));
-					if (originName != null && originName.length() > 0) {
-						String name = rs.getString("user_name");
-						RelEntry entry = new RelEntry(originName, name);
+					RelEntry entry = new RelEntry();
+					entry.setForwardBloggerId(rs.getString("forwarder_id"));
+					entry.setOriginBloggerId(rs.getString("blogger_id"));
+					entry.setInfo(rs.getString("content"));
+					entries.add(entry);
+				} while (rs.next());
+			}
+		});
+		jdbcTemplate.query(sql2, new RowCallbackHandler() {
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				do {
+					RelEntry entry = new RelEntry();
+					entry.setForwardBloggerId(rs.getString("forwarder_id"));
+					String content = rs.getString("content");
+					String originBloggerName = getBloggerForFoward(content);
+					if(originBloggerName != null){
+						String id = bloggerDao.getBloggerByName(originBloggerName).getId();
+						entry.setOriginBloggerId(id);
+						String info = content.substring(0, content.indexOf("//@"));
+						entry.setInfo(info);
 						entries.add(entry);
 					}
 				} while (rs.next());
 			}
-
 		});
 		return entries;
 	}
@@ -154,9 +171,11 @@ public class RelDao {
 			if (index3 > 0) {
 				index2 = Math.min(index2, index3);
 			}
-			name = content.substring(index1, index2).trim();
-			if (name.contains("@") || name.length() > 30 || name.length() == 0) {
-				name = null;
+			if(index2 > 0){
+				name = content.substring(index1, index2).trim();
+				if (name.contains("@") || name.length() > 30 || name.length() == 0) {
+					name = null;
+				}
 			}
 		}
 		return name;

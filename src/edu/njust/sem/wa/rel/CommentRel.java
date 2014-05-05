@@ -15,8 +15,8 @@ public class CommentRel {
 		List<RelEntry> entries = relDao.getCommentRels();
 		try {
 			for (RelEntry entry : entries) {
-				String nameR = entry.getBlogger();
-				String nameO = entry.getOrigin();
+				String nameR = entry.getForwardBloggerId();
+				String nameO = entry.getOriginBloggerId();
 				try {
 					insertRel(nameR, nameO);
 					putInMap(nameR);

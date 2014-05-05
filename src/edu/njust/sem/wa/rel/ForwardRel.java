@@ -15,8 +15,8 @@ public class ForwardRel {
 		List<RelEntry> entries = relDao.getForwardRels();
 		try {
 			for (RelEntry entry : entries) {
-				String nameO = entry.getOrigin();
-				String nameF = entry.getBlogger();
+				String nameO = entry.getOriginBloggerId();
+				String nameF = entry.getForwardBloggerId();
 				if (nameO != null) {
 					try {
 						insertRel(nameF, nameO);

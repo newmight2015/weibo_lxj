@@ -16,8 +16,8 @@ public class AtRel {
 		List<RelEntry> entries = relDao.getAtRels();
 		try {
 			for (RelEntry entry : entries) {
-				String nameO = entry.getBlogger();
-				String nameA = entry.getOrigin();
+				String nameO = entry.getForwardBloggerId();
+				String nameA = entry.getOriginBloggerId();
 				try {
 					insertRel(nameA, nameO);
 					putInMap(nameO);

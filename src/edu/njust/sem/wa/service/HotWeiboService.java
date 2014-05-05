@@ -86,9 +86,6 @@ public class HotWeiboService {
 		String html = null;
 		do {
 			html = weiboPage.getCurrPageHtml();
-			if (html.contains("还没有人转发，赶快抢个沙发")) {
-				return true;
-			}
 			if (hotWeibo.getForwardRequestTimes() > 10) {
 				Logger.log(hotWeibo+" 出现异常！请检查！");
 				return true;
@@ -109,12 +106,6 @@ public class HotWeiboService {
 		WeiboPage weiboPage = new WeiboPage(hotWeibo, PageType.Comment);
 		do {
 			html = weiboPage.getCurrPageHtml();
-			if (html != null && html.contains("还没有人评论，赶快抢个沙发")) {
-				return true;
-			}
-			if (html != null && html.contains("由于用户设置，你无法回复评论。")) {
-				return true;
-			}
 			if (hotWeibo.getCommentRequestTimes() > 10) {
 				Logger.log(hotWeibo+" 出现异常！请检查！");
 				return true;

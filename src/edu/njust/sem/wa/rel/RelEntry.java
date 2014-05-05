@@ -1,34 +1,46 @@
 package edu.njust.sem.wa.rel;
 
 public class RelEntry {
-	private String origin;
-	public String getOrigin() {
-		return origin;
-	}
+	private String originBloggerId;
+	private String info;
+	private String forwardBloggerId;
 
-	public void setOrigin(String origin) {
-		this.origin = origin;
+	public RelEntry() {
 	}
-
-	private String blogger;
 
 	public RelEntry(String origin, String blogger) {
-		this.origin = origin.toLowerCase();
-		this.blogger = blogger.toLowerCase();
+		this.originBloggerId = origin.toLowerCase();
+		this.setForwardBloggerId(blogger.toLowerCase());
+	}
+
+	public String getOriginBloggerId() {
+		return originBloggerId;
+	}
+
+	public void setOriginBloggerId(String originBloggerId) {
+		this.originBloggerId = originBloggerId;
+	}
+
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 	@Override
 	public String toString() {
-		return "RelEntry [content=" + origin + ", blogger=" + blogger + "]";
+		return "RelEntry [content=" + originBloggerId + ", blogger="
+				+ forwardBloggerId + "]";
 	}
 
-	
-	public String getBlogger() {
-		return blogger;
+	public String getForwardBloggerId() {
+		return forwardBloggerId;
 	}
 
-	public void setBlogger(String blogger) {
-		this.blogger = blogger;
+	public void setForwardBloggerId(String forwardBloggerId) {
+		this.forwardBloggerId = forwardBloggerId;
 	}
-
 }
